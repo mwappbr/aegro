@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackerNews Acessível - Top Stories</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Flaticon Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <style>
+        /* ========== CSS RESET & BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color Palette */
+            --color-primary: #1e40af;
+            --color-primary-light: #3b82f6;
+            --color-primary-dark: #1e3a8a;
+            --color-secondary: #60a5fa;
+            --color-accent: #93c5fd;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+            --color-gray-900: #111827;
+            --color-gray-700: #374151;
+            --color-gray-500: #6b7280;
+            --color-gray-300: #d1d5db;
+            --color-gray-100: #f3f4f6;
+            --color-gray-50: #f9fafb;
+            --color-white: #ffffff;
+
+            /* Typography */
+            --font-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 12px;
+            --space-base: 16px;
+            --space-lg: 20px;
+            --space-xl: 24px;
+            --space-2xl: 32px;
+            --space-3xl: 48px;
+            --space-4xl: 64px;
+
+            /* Borders */
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--color-gray-900);
+            background-color: var(--color-gray-50);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== SKIP LINK (Accessibility) ========== */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: var(--space-sm) var(--space-base);
+            text-decoration: none;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+            outline: 3px solid var(--color-primary-dark);
+            outline-offset: 2px;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-xl);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .logo:focus {
+            outline: 3px solid var(--color-white);
+            outline-offset: 4px;
+        }
+
+        .nav-link {
+            color: var(--color-white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: var(--space-sm) var(--space-base);
+            border-radius: var(--radius-md);
+            transition: background-color 150ms ease-out;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link:focus {
+            outline: 3px solid var(--color-white);
+            outline-offset: 2px;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: var(--space-3xl) var(--space-xl);
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--color-primary-dark);
+            margin-bottom: var(--space-2xl);
+        }
+
+        /* ========== ARTICLE CARDS ========== */
+        .story-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-base);
+            list-style: none;
+        }
+
+        .story-card {
+            background-color: var(--color-white);
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            transition: all 200ms ease-out;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .story-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .story-card:focus-within {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .story-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .story-title {
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            transition: color 150ms ease;
+        }
+
+        .story-link:hover .story-title {
+            color: var(--color-primary-light);
+            text-decoration: underline;
+        }
+
+        .story-domain {
+            font-size: 14px;
+            color: var(--color-gray-500);
+            margin-bottom: var(--space-base);
+        }
+
+        .story-metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-base);
+            font-size: 16px;
+            color: var(--color-gray-700);
+            align-items: center;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .metadata-item i {
+            font-size: 18px;
+            color: var(--color-gray-500);
+            display: flex;
+            align-items: center;
+        }
+
+        .metadata-separator {
+            color: var(--color-gray-300);
+            user-select: none;
+        }
+
+        /* ========== LOADING STATE ========== */
+        .skeleton-card {
+            background-color: var(--color-white);
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .skeleton-title {
+            height: 24px;
+            width: 80%;
+            background: linear-gradient(
+                90deg,
+                var(--color-gray-100) 25%,
+                var(--color-gray-200) 50%,
+                var(--color-gray-100) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .skeleton-domain {
+            height: 14px;
+            width: 30%;
+            background: linear-gradient(
+                90deg,
+                var(--color-gray-100) 25%,
+                var(--color-gray-200) 50%,
+                var(--color-gray-100) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-base);
+        }
+
+        .skeleton-metadata {
+            height: 16px;
+            width: 50%;
+            background: linear-gradient(
+                90deg,
+                var(--color-gray-100) 25%,
+                var(--color-gray-200) 50%,
+                var(--color-gray-100) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: var(--radius-md);
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .loading-hidden {
+            display: none;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background-color: var(--color-white);
+            border-top: 1px solid var(--color-gray-300);
+            padding: var(--space-2xl) var(--space-xl);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            color: var(--color-gray-700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer-link:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 767px) {
+            .header {
+                height: 64px;
+                padding: 0 var(--space-base);
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            main {
+                padding: var(--space-xl) var(--space-base);
+            }
+
+            .page-title {
+                font-size: 24px;
+                margin-bottom: var(--space-xl);
+            }
+
+            .story-card {
+                padding: var(--space-base);
+            }
+
+            .story-title {
+                font-size: 18px;
+            }
+
+            .story-metadata {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-sm);
+            }
+
+            .metadata-separator {
+                display: none;
+            }
+        }
+
+        @media (max-width: 1023px) and (min-width: 768px) {
+            main {
+                max-width: 700px;
+            }
+        }
+
+        /* ========== REDUCED MOTION ========== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ========== UTILITY CLASSES ========== */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fi fi-sr-diamond" aria-hidden="true"></i>
+                <span>HN Acessível</span>
+            </a>
+            <nav role="navigation" aria-label="Navegação principal">
+                <a href="/" class="nav-link" aria-current="page">Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        <h1 class="page-title">Top Stories do HackerNews</h1>
+
+        <!-- Loading State (remove class 'loading-hidden' to show) -->
+        <div id="loading-state" class="loading-hidden" role="status" aria-live="polite" aria-label="Carregando artigos">
+            <ul class="story-list">
+                <li class="skeleton-card">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-domain"></div>
+                    <div class="skeleton-metadata"></div>
+                </li>
+                <li class="skeleton-card">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-domain"></div>
+                    <div class="skeleton-metadata"></div>
+                </li>
+                <li class="skeleton-card">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-domain"></div>
+                    <div class="skeleton-metadata"></div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Story List -->
+        <ul class="story-list" role="list" aria-label="Lista de artigos do HackerNews">
+            <!-- Article Card 1 -->
+            <li>
+                <article class="story-card">
+                    <a href="/story/1" class="story-link">
+                        <h2 class="story-title">Show HN: I built a tool to make reading HackerNews accessible for seniors</h2>
+                        <p class="story-domain">github.com</p>
+                        <div class="story-metadata">
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-user" aria-label="Autor"></i>
+                                <span>johnsmith</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-arrow-small-up" aria-label="Pontos"></i>
+                                <span>342 pontos</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-comment" aria-label="Comentários"></i>
+                                <span>87 comentários</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                <span>há 2 horas</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+            </li>
+
+            <!-- Article Card 2 -->
+            <li>
+                <article class="story-card">
+                    <a href="/story/2" class="story-link">
+                        <h2 class="story-title">Ask HN: What are the best practices for web accessibility in 2026?</h2>
+                        <p class="story-domain">news.ycombinator.com</p>
+                        <div class="story-metadata">
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-user" aria-label="Autor"></i>
+                                <span>accessibility_fan</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-arrow-small-up" aria-label="Pontos"></i>
+                                <span>218 pontos</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-comment" aria-label="Comentários"></i>
+                                <span>154 comentários</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                <span>há 4 horas</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+            </li>
+
+            <!-- Article Card 3 -->
+            <li>
+                <article class="story-card">
+                    <a href="/story/3" class="story-link">
+                        <h2 class="story-title">Claude 4 Released: Major improvements to reasoning and coding capabilities</h2>
+                        <p class="story-domain">anthropic.com</p>
+                        <div class="story-metadata">
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-user" aria-label="Autor"></i>
+                                <span>ai_researcher</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-arrow-small-up" aria-label="Pontos"></i>
+                                <span>1,247 pontos</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-comment" aria-label="Comentários"></i>
+                                <span>423 comentários</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                <span>há 6 horas</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+            </li>
+
+            <!-- Article Card 4 -->
+            <li>
+                <article class="story-card">
+                    <a href="/story/4" class="story-link">
+                        <h2 class="story-title">The Forgotten Art of Writing Accessible HTML in the Age of JavaScript Frameworks</h2>
+                        <p class="story-domain">medium.com</p>
+                        <div class="story-metadata">
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-user" aria-label="Autor"></i>
+                                <span>webdev_guru</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-arrow-small-up" aria-label="Pontos"></i>
+                                <span>567 pontos</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-comment" aria-label="Comentários"></i>
+                                <span>234 comentários</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                <span>há 8 horas</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+            </li>
+
+            <!-- Article Card 5 -->
+            <li>
+                <article class="story-card">
+                    <a href="/story/5" class="story-link">
+                        <h2 class="story-title">Why Vue.js 3 Composition API is Perfect for Building Accessible Applications</h2>
+                        <p class="story-domain">vuejs.org</p>
+                        <div class="story-metadata">
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-user" aria-label="Autor"></i>
+                                <span>vue_enthusiast</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-arrow-small-up" aria-label="Pontos"></i>
+                                <span>892 pontos</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-comment" aria-label="Comentários"></i>
+                                <span>312 comentários</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                <span>há 12 horas</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+            </li>
+
+            <!-- Article Card 6 -->
+            <li>
+                <article class="story-card">
+                    <a href="/story/6" class="story-link">
+                        <h2 class="story-title">How I Improved My Website's Lighthouse Accessibility Score to 100</h2>
+                        <p class="story-domain">dev.to</p>
+                        <div class="story-metadata">
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-user" aria-label="Autor"></i>
+                                <span>frontend_dev</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-arrow-small-up" aria-label="Pontos"></i>
+                                <span>445 pontos</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-comment" aria-label="Comentários"></i>
+                                <span>98 comentários</span>
+                            </span>
+                            <span class="metadata-separator" aria-hidden="true">|</span>
+                            <span class="metadata-item">
+                                <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                <span>há 1 dia</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+            </li>
+        </ul>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-content">
+            <p>
+                Dados obtidos da <a href="https://news.ycombinator.com" class="footer-link" target="_blank" rel="noopener noreferrer">API oficial do HackerNews</a>.
+                <br>
+                Este é um projeto de demonstração focado em acessibilidade para usuários seniores.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Simular loading state (apenas para demonstração)
+        // Em produção, isso seria controlado por Vue.js baseado em API calls
+        
+        // Para testar loading state, descomente as linhas abaixo:
+        /*
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingState = document.getElementById('loading-state');
+            const storyList = document.querySelector('.story-list[role="list"]');
+            
+            // Mostrar loading
+            loadingState.classList.remove('loading-hidden');
+            storyList.style.display = 'none';
+            
+            // Simular carregamento de 2 segundos
+            setTimeout(() => {
+                loadingState.classList.add('loading-hidden');
+                storyList.style.display = 'flex';
+            }, 2000);
+        });
+        */
+    </script>
+</body>
+</html>

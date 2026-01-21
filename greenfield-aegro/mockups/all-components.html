@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackerNews Acessível - Todos os Componentes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Flaticon Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <style>
+        /* ========== CSS RESET & BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color Palette */
+            --color-primary: #1e40af;
+            --color-primary-light: #3b82f6;
+            --color-primary-dark: #1e3a8a;
+            --color-secondary: #60a5fa;
+            --color-accent: #93c5fd;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+            --color-gray-900: #111827;
+            --color-gray-700: #374151;
+            --color-gray-500: #6b7280;
+            --color-gray-300: #d1d5db;
+            --color-gray-100: #f3f4f6;
+            --color-gray-50: #f9fafb;
+            --color-white: #ffffff;
+
+            /* Typography */
+            --font-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 12px;
+            --space-base: 16px;
+            --space-lg: 20px;
+            --space-xl: 24px;
+            --space-2xl: 32px;
+            --space-3xl: 48px;
+            --space-4xl: 64px;
+
+            /* Borders */
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--color-gray-900);
+            background-color: var(--color-gray-50);
+            padding: var(--space-2xl);
+        }
+
+        .showcase-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .showcase-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+            color: white;
+            padding: var(--space-3xl) var(--space-2xl);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-4xl);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .showcase-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: var(--space-base);
+        }
+
+        .showcase-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-3xl);
+            margin-bottom: var(--space-3xl);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+            margin-bottom: var(--space-base);
+            padding-bottom: var(--space-base);
+            border-bottom: 2px solid var(--color-accent);
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: var(--color-gray-700);
+            margin-bottom: var(--space-2xl);
+            line-height: 1.6;
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-xl);
+            margin-top: var(--space-2xl);
+        }
+
+        .component-item {
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            background: var(--color-gray-50);
+        }
+
+        .component-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-gray-700);
+            margin-bottom: var(--space-base);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== SKIP LINK ========== */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: var(--space-sm) var(--space-base);
+            text-decoration: none;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+            outline: 3px solid var(--color-primary-dark);
+            outline-offset: 2px;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-xl);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-md);
+        }
+
+        .header-content {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .logo:focus {
+            outline: 3px solid var(--color-white);
+            outline-offset: 4px;
+        }
+
+        .nav-link {
+            color: var(--color-white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: var(--space-sm) var(--space-base);
+            border-radius: var(--radius-md);
+            transition: background-color 150ms ease-out;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link:focus {
+            outline: 3px solid var(--color-white);
+            outline-offset: 2px;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-primary);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 150ms ease-out;
+            text-decoration: none;
+            min-height: 44px;
+            min-width: 100px;
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-dark);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-white);
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-gray-50);
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            color: var(--color-primary);
+        }
+
+        .btn-ghost:hover {
+            background-color: var(--color-gray-100);
+        }
+
+        .btn-danger {
+            background-color: var(--color-error);
+            color: var(--color-white);
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ========== CARDS ========== */
+        .story-card {
+            background-color: var(--color-white);
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            transition: all 200ms ease-out;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .story-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .story-card:focus-within {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .story-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .story-title {
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--color-primary);
+            margin-bottom: var(--space-md);
+            transition: color 150ms ease;
+        }
+
+        .story-link:hover .story-title {
+            color: var(--color-primary-light);
+            text-decoration: underline;
+        }
+
+        .story-domain {
+            font-size: 14px;
+            color: var(--color-gray-500);
+            margin-bottom: var(--space-base);
+        }
+
+        .story-metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-base);
+            font-size: 16px;
+            color: var(--color-gray-700);
+            align-items: center;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .metadata-item i {
+            font-size: 18px;
+            color: var(--color-gray-500);
+        }
+
+        .metadata-separator {
+            color: var(--color-gray-300);
+            user-select: none;
+        }
+
+        /* ========== BREADCRUMB ========== */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 14px;
+            padding: var(--space-base) 0;
+            color: var(--color-gray-700);
+        }
+
+        .breadcrumb a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-separator {
+            color: var(--color-gray-400);
+        }
+
+        .breadcrumb-current {
+            color: var(--color-gray-900);
+            font-weight: 500;
+        }
+
+        /* ========== COMMENTS ========== */
+        .comments-section {
+            margin-top: var(--space-3xl);
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .comments-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-gray-900);
+        }
+
+        .comment-thread {
+            list-style: none;
+        }
+
+        .comment {
+            background: var(--color-white);
+            border-left: 3px solid var(--color-accent);
+            padding: var(--space-base);
+            margin-bottom: var(--space-md);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .comment.nested-1 {
+            margin-left: 32px;
+            background: var(--color-gray-50);
+        }
+
+        .comment.nested-2 {
+            margin-left: 64px;
+            background: var(--color-white);
+        }
+
+        .comment.nested-3 {
+            margin-left: 96px;
+            background: var(--color-gray-50);
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-base);
+            margin-bottom: var(--space-sm);
+            font-size: 14px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--color-gray-900);
+        }
+
+        .comment-author.op {
+            color: var(--color-primary);
+        }
+
+        .comment-time {
+            color: var(--color-gray-500);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .comment-body {
+            color: var(--color-gray-900);
+            line-height: 1.5;
+            margin-bottom: var(--space-sm);
+        }
+
+        .comment-footer {
+            display: flex;
+            gap: var(--space-base);
+        }
+
+        .comment-action {
+            background: none;
+            border: none;
+            color: var(--color-primary);
+            font-size: 14px;
+            cursor: pointer;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .comment-action:hover {
+            background: var(--color-gray-100);
+        }
+
+        /* ========== SKELETON ========== */
+        .skeleton-card {
+            background-color: var(--color-white);
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            overflow: hidden;
+        }
+
+        .skeleton-title,
+        .skeleton-domain,
+        .skeleton-metadata {
+            background: linear-gradient(
+                90deg,
+                var(--color-gray-100) 25%,
+                var(--color-gray-200) 50%,
+                var(--color-gray-100) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: var(--radius-md);
+        }
+
+        .skeleton-title {
+            height: 24px;
+            width: 80%;
+            margin-bottom: var(--space-md);
+        }
+
+        .skeleton-domain {
+            height: 14px;
+            width: 30%;
+            margin-bottom: var(--space-base);
+        }
+
+        .skeleton-metadata {
+            height: 16px;
+            width: 50%;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* ========== ERROR STATES ========== */
+        .error-state {
+            text-align: center;
+            padding: var(--space-4xl) var(--space-xl);
+        }
+
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: var(--space-xl);
+        }
+
+        .error-icon.network { color: var(--color-error); }
+        .error-icon.not-found { color: var(--color-gray-500); }
+        .error-icon.timeout { color: var(--color-warning); }
+
+        .error-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-gray-900);
+            margin-bottom: var(--space-base);
+        }
+
+        .error-message {
+            font-size: 16px;
+            color: var(--color-gray-700);
+            margin-bottom: var(--space-2xl);
+            line-height: 1.6;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: var(--space-base);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ========== BADGES ========== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-xs) var(--space-md);
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge-primary {
+            background-color: var(--color-secondary);
+            color: var(--color-primary-dark);
+        }
+
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* ========== ARTICLE PAGE ========== */
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .article-header {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .article-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--color-primary-dark);
+            margin-bottom: var(--space-base);
+        }
+
+        .article-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-base);
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            color: var(--color-gray-700);
+        }
+
+        .article-separator {
+            width: 100%;
+            height: 1px;
+            background: var(--color-gray-300);
+            margin: var(--space-xl) 0;
+        }
+
+        .article-text {
+            line-height: 1.6;
+            color: var(--color-gray-900);
+        }
+
+        .article-text p {
+            margin-bottom: var(--space-base);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background-color: var(--color-white);
+            border-top: 1px solid var(--color-gray-300);
+            padding: var(--space-2xl) var(--space-xl);
+            border-radius: var(--radius-md);
+        }
+
+        .footer-content {
+            text-align: center;
+            color: var(--color-gray-700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== COLOR PALETTE ========== */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: var(--space-base);
+        }
+
+        .color-swatch {
+            text-align: center;
+        }
+
+        .color-box {
+            height: 80px;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-sm);
+            border: 1px solid var(--color-gray-300);
+        }
+
+        .color-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-gray-700);
+            margin-bottom: 2px;
+        }
+
+        .color-hex {
+            font-size: 11px;
+            font-family: monospace;
+            color: var(--color-gray-500);
+        }
+
+        /* ========== TYPOGRAPHY ========== */
+        .type-sample h1 { 
+            font-size: 32px; 
+            font-weight: 700; 
+            line-height: 1.2; 
+            margin-bottom: var(--space-base);
+        }
+        .type-sample h2 { 
+            font-size: 24px; 
+            font-weight: 600; 
+            line-height: 1.3; 
+            margin-bottom: var(--space-base);
+        }
+        .type-sample h3 { 
+            font-size: 20px; 
+            font-weight: 600; 
+            line-height: 1.4; 
+            margin-bottom: var(--space-base);
+        }
+        .type-sample p { 
+            font-size: 16px; 
+            font-weight: 400; 
+            line-height: 1.5; 
+            margin-bottom: var(--space-base);
+        }
+        .type-sample small { 
+            font-size: 14px; 
+            font-weight: 400; 
+            line-height: 1.4; 
+            color: var(--color-gray-500);
+        }
+
+        @media (max-width: 767px) {
+            body { padding: var(--space-base); }
+            .showcase-title { font-size: 28px; }
+            .section { padding: var(--space-xl); }
+            .component-grid { grid-template-columns: 1fr; }
+            .color-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="showcase-container">
+        <!-- Header -->
+        <div class="showcase-header">
+            <h1 class="showcase-title">🎨 HackerNews Acessível - Biblioteca de Componentes</h1>
+            <p class="showcase-subtitle">Design System completo com todos os componentes, estados e variações</p>
+        </div>
+
+        <!-- Section: Design Tokens - Colors -->
+        <section class="section">
+            <h2 class="section-title">🎨 Paleta de Cores</h2>
+            <p class="section-description">
+                Todas as cores validadas para WCAG 2.1 AA com contraste mínimo de 4.5:1 para texto.
+            </p>
+            
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #1e40af;"></div>
+                    <div class="color-name">Primary</div>
+                    <div class="color-hex">#1e40af</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #3b82f6;"></div>
+                    <div class="color-name">Primary Light</div>
+                    <div class="color-hex">#3b82f6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #1e3a8a;"></div>
+                    <div class="color-name">Primary Dark</div>
+                    <div class="color-hex">#1e3a8a</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #60a5fa;"></div>
+                    <div class="color-name">Secondary</div>
+                    <div class="color-hex">#60a5fa</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #93c5fd;"></div>
+                    <div class="color-name">Accent</div>
+                    <div class="color-hex">#93c5fd</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #10b981;"></div>
+                    <div class="color-name">Success</div>
+                    <div class="color-hex">#10b981</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #f59e0b;"></div>
+                    <div class="color-name">Warning</div>
+                    <div class="color-hex">#f59e0b</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #ef4444;"></div>
+                    <div class="color-name">Error</div>
+                    <div class="color-hex">#ef4444</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #111827;"></div>
+                    <div class="color-name">Gray 900</div>
+                    <div class="color-hex">#111827</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #374151;"></div>
+                    <div class="color-name">Gray 700</div>
+                    <div class="color-hex">#374151</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #6b7280;"></div>
+                    <div class="color-name">Gray 500</div>
+                    <div class="color-hex">#6b7280</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #d1d5db;"></div>
+                    <div class="color-name">Gray 300</div>
+                    <div class="color-hex">#d1d5db</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #f3f4f6;"></div>
+                    <div class="color-name">Gray 100</div>
+                    <div class="color-hex">#f3f4f6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #f9fafb;"></div>
+                    <div class="color-name">Gray 50</div>
+                    <div class="color-hex">#f9fafb</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #ffffff; border: 2px solid #d1d5db;"></div>
+                    <div class="color-name">White</div>
+                    <div class="color-hex">#ffffff</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Typography -->
+        <section class="section">
+            <h2 class="section-title">📝 Tipografia</h2>
+            <p class="section-description">
+                Fonte Roboto com tamanhos e pesos otimizados para legibilidade. Tamanho mínimo: 16px para corpo de texto.
+            </p>
+            
+            <div class="type-sample">
+                <h1>Heading 1 - 32px / 700 weight / 1.2 line-height</h1>
+                <h2>Heading 2 - 24px / 600 weight / 1.3 line-height</h2>
+                <h3>Heading 3 - 20px / 600 weight / 1.4 line-height</h3>
+                <p>Body Text - 16px / 400 weight / 1.5 line-height. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <small>Small Text - 14px / 400 weight / 1.4 line-height (usado apenas para metadados)</small>
+            </div>
+        </section>
+
+        <!-- Section: Header Component -->
+        <section class="section">
+            <h2 class="section-title">🏠 Header (Componente de Navegação)</h2>
+            <p class="section-description">
+                Header fixo com logo, navegação e skip link para acessibilidade. Altura: 80px desktop, 64px mobile.
+            </p>
+            
+            <a href="#main" class="skip-link">Pular para conteúdo principal</a>
+            <header class="header">
+                <div class="header-content">
+                    <a href="/" class="logo">
+                        <i class="fi fi-sr-diamond" aria-hidden="true"></i>
+                        <span>HN Acessível</span>
+                    </a>
+                    <nav>
+                        <a href="/" class="nav-link">Home</a>
+                    </nav>
+                </div>
+            </header>
+        </section>
+
+        <!-- Section: Buttons -->
+        <section class="section">
+            <h2 class="section-title">🔘 Botões</h2>
+            <p class="section-description">
+                Todos os botões têm altura mínima de 44px para acessibilidade em dispositivos touch.
+            </p>
+            
+            <div class="component-grid">
+                <div class="component-item">
+                    <div class="component-label">Primary Button</div>
+                    <button class="btn btn-primary">
+                        <i class="fi fi-rr-check"></i>
+                        Confirmar
+                    </button>
+                </div>
+                
+                <div class="component-item">
+                    <div class="component-label">Secondary Button</div>
+                    <button class="btn btn-secondary">
+                        <i class="fi fi-rr-arrow-small-left"></i>
+                        Voltar
+                    </button>
+                </div>
+                
+                <div class="component-item">
+                    <div class="component-label">Ghost Button</div>
+                    <button class="btn btn-ghost">
+                        <i class="fi fi-rr-link"></i>
+                        Link Externo
+                    </button>
+                </div>
+                
+                <div class="component-item">
+                    <div class="component-label">Danger Button</div>
+                    <button class="btn btn-danger">
+                        <i class="fi fi-rr-cross"></i>
+                        Deletar
+                    </button>
+                </div>
+                
+                <div class="component-item">
+                    <div class="component-label">Disabled Button</div>
+                    <button class="btn btn-primary" disabled>
+                        <i class="fi fi-rr-spinner"></i>
+                        Carregando...
+                    </button>
+                </div>
+                
+                <div class="component-item">
+                    <div class="component-label">Retry Button</div>
+                    <button class="btn btn-primary">
+                        <i class="fi fi-rr-refresh"></i>
+                        Tentar Novamente
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Badges -->
+        <section class="section">
+            <h2 class="section-title">🏷️ Badges</h2>
+            <p class="section-description">
+                Badges para identificar tipos de posts e estados.
+            </p>
+            
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <span class="badge badge-primary">Ask HN</span>
+                <span class="badge badge-primary">Show HN</span>
+                <span class="badge badge-primary">Story</span>
+                <span class="badge badge-success">OP</span>
+                <span class="badge badge-warning">Job</span>
+                <span class="badge badge-error">Deleted</span>
+            </div>
+        </section>
+
+        <!-- Section: Story Cards -->
+        <section class="section">
+            <h2 class="section-title">📰 Story Cards (Cards de Artigos)</h2>
+            <p class="section-description">
+                Cards clicáveis que exibem preview dos artigos do HackerNews. Hover levanta o card com sombra.
+            </p>
+            
+            <article class="story-card">
+                <a href="/story/1" class="story-link">
+                    <h2 class="story-title">Show HN: I built a tool to make reading HackerNews accessible for seniors</h2>
+                    <p class="story-domain">github.com</p>
+                    <div class="story-metadata">
+                        <span class="metadata-item">
+                            <i class="fi fi-rr-user" aria-label="Autor"></i>
+                            <span>johnsmith</span>
+                        </span>
+                        <span class="metadata-separator" aria-hidden="true">|</span>
+                        <span class="metadata-item">
+                            <i class="fi fi-rr-arrow-small-up" aria-label="Pontos"></i>
+                            <span>342 pontos</span>
+                        </span>
+                        <span class="metadata-separator" aria-hidden="true">|</span>
+                        <span class="metadata-item">
+                            <i class="fi fi-rr-comment" aria-label="Comentários"></i>
+                            <span>87 comentários</span>
+                        </span>
+                        <span class="metadata-separator" aria-hidden="true">|</span>
+                        <span class="metadata-item">
+                            <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                            <span>há 2 horas</span>
+                        </span>
+                    </div>
+                </a>
+            </article>
+        </section>
+
+        <!-- Section: Breadcrumb -->
+        <section class="section">
+            <h2 class="section-title">🍞 Breadcrumb (Navegação Hierárquica)</h2>
+            <p class="section-description">
+                Breadcrumbs para mostrar localização na hierarquia de páginas.
+            </p>
+            
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span class="breadcrumb-separator" aria-hidden="true">›</span>
+                <span class="breadcrumb-current" aria-current="page">Show HN: I built a tool to make reading HackerNews...</span>
+            </nav>
+        </section>
+
+        <!-- Section: Article Page -->
+        <section class="section">
+            <h2 class="section-title">📄 Página de Artigo</h2>
+            <p class="section-description">
+                Visualização completa de um artigo com metadados, link para original e texto do post.
+            </p>
+            
+            <div class="article-container">
+                <div style="margin-bottom: 16px;">
+                    <button class="btn btn-secondary">
+                        <i class="fi fi-rr-angle-small-left"></i>
+                        Voltar
+                    </button>
+                </div>
+                
+                <div class="article-header">
+                    <h1 class="article-title">Ask HN: What are the best practices for web accessibility in 2026?</h1>
+                    
+                    <div class="article-meta-row">
+                        <span class="badge badge-primary">Ask HN</span>
+                        <span class="metadata-item">
+                            <i class="fi fi-rr-user" aria-label="Autor"></i>
+                            <span>accessibility_fan</span>
+                        </span>
+                        <span class="metadata-separator">|</span>
+                        <span class="metadata-item">
+                            <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                            <span>há 4 horas</span>
+                        </span>
+                    </div>
+                    
+                    <div class="article-meta-row">
+                        <span class="metadata-item">
+                            <i class="fi fi-rr-arrow-small-up" aria-label="Pontos"></i>
+                            <span>218 pontos</span>
+                        </span>
+                        <span class="metadata-separator">|</span>
+                        <span class="metadata-item">
+                            <i class="fi fi-rr-comment" aria-label="Comentários"></i>
+                            <span>154 comentários</span>
+                        </span>
+                        <span class="metadata-separator">|</span>
+                        <span class="metadata-item">
+                            <i class="fi fi-rr-link" aria-label="Link"></i>
+                            <span>news.ycombinator.com</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="article-separator"></div>
+                
+                <button class="btn btn-secondary">
+                    <i class="fi fi-rr-link"></i>
+                    Acessar Artigo Original →
+                </button>
+                
+                <div class="article-separator"></div>
+                
+                <div class="article-text">
+                    <p>I'm working on a project to make the web more accessible for senior users (60+ years old). I've implemented WCAG 2.1 AA compliance, but I'm wondering what else I should consider.</p>
+                    <p>What are your experiences with designing for accessibility? Any tips or resources you'd recommend?</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Comments -->
+        <section class="section">
+            <h2 class="section-title">💬 Sistema de Comentários (Hierárquico)</h2>
+            <p class="section-description">
+                Comments threads com nesting ilimitado, indentação visual e controles de expand/collapse.
+            </p>
+            
+            <div class="comments-section">
+                <div class="comments-header">
+                    <h3 class="comments-title">Comentários (8)</h3>
+                    <div>
+                        <button class="btn btn-ghost">Expandir Todos</button>
+                        <button class="btn btn-ghost">Colapsar Todos</button>
+                    </div>
+                </div>
+                
+                <ul class="comment-thread">
+                    <li>
+                        <article class="comment">
+                            <div class="comment-header">
+                                <span class="comment-author">tech_guru</span>
+                                <span class="comment-time">
+                                    <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                    há 1 hora
+                                </span>
+                            </div>
+                            <div class="comment-body">
+                                Great question! I'd recommend focusing on keyboard navigation first. Many seniors prefer keyboard over mouse due to mobility issues.
+                            </div>
+                            <div class="comment-footer">
+                                <button class="comment-action">
+                                    <i class="fi fi-rr-angle-small-down"></i>
+                                    Recolher
+                                </button>
+                            </div>
+                        </article>
+                        
+                        <!-- Nested Comment Level 1 -->
+                        <ul class="comment-thread">
+                            <li>
+                                <article class="comment nested-1">
+                                    <div class="comment-header">
+                                        <span class="comment-author op">accessibility_fan</span>
+                                        <span class="badge badge-success" style="font-size: 11px; padding: 2px 8px;">OP</span>
+                                        <span class="comment-time">
+                                            <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                            há 45 minutos
+                                        </span>
+                                    </div>
+                                    <div class="comment-body">
+                                        Thanks! I've already implemented full keyboard navigation. What about color contrast?
+                                    </div>
+                                    <div class="comment-footer">
+                                        <button class="comment-action">
+                                            <i class="fi fi-rr-angle-small-down"></i>
+                                            Recolher
+                                        </button>
+                                    </div>
+                                </article>
+                                
+                                <!-- Nested Comment Level 2 -->
+                                <ul class="comment-thread">
+                                    <li>
+                                        <article class="comment nested-2">
+                                            <div class="comment-header">
+                                                <span class="comment-author">design_expert</span>
+                                                <span class="comment-time">
+                                                    <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                                    há 30 minutos
+                                                </span>
+                                            </div>
+                                            <div class="comment-body">
+                                                For color contrast, aim for at least 4.5:1 ratio. Use WebAIM's contrast checker tool.
+                                            </div>
+                                            <div class="comment-footer">
+                                                <button class="comment-action">
+                                                    <i class="fi fi-rr-angle-small-down"></i>
+                                                    Recolher
+                                                </button>
+                                            </div>
+                                        </article>
+                                        
+                                        <!-- Nested Comment Level 3 -->
+                                        <ul class="comment-thread">
+                                            <li>
+                                                <article class="comment nested-3">
+                                                    <div class="comment-header">
+                                                        <span class="comment-author">a11y_developer</span>
+                                                        <span class="comment-time">
+                                                            <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                                            há 15 minutos
+                                                        </span>
+                                                    </div>
+                                                    <div class="comment-body">
+                                                        Also consider using Lighthouse in Chrome DevTools for automated accessibility audits.
+                                                    </div>
+                                                    <div class="comment-footer">
+                                                        <button class="comment-action">
+                                                            <i class="fi fi-rr-angle-small-right"></i>
+                                                            Expandir (1 resposta)
+                                                        </button>
+                                                    </div>
+                                                </article>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Another Root Comment -->
+                    <li>
+                        <article class="comment">
+                            <div class="comment-header">
+                                <span class="comment-author">ux_designer</span>
+                                <span class="comment-time">
+                                    <i class="fi fi-rr-clock" aria-label="Tempo"></i>
+                                    há 2 horas
+                                </span>
+                            </div>
+                            <div class="comment-body">
+                                Don't forget about font size! Minimum 16px for body text is crucial for readability.
+                            </div>
+                            <div class="comment-footer">
+                                <button class="comment-action">
+                                    <i class="fi fi-rr-angle-small-right"></i>
+                                    Expandir (2 respostas)
+                                </button>
+                            </div>
+                        </article>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section: Loading States -->
+        <section class="section">
+            <h2 class="section-title">⏳ Estados de Loading (Skeleton)</h2>
+            <p class="section-description">
+                Skeleton screens com shimmer animation para indicar carregamento de conteúdo.
+            </p>
+            
+            <div class="skeleton-card" role="status" aria-label="Carregando artigo">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-domain"></div>
+                <div class="skeleton-metadata"></div>
+            </div>
+        </section>
+
+        <!-- Section: Error States -->
+        <section class="section">
+            <h2 class="section-title">⚠️ Estados de Erro</h2>
+            <p class="section-description">
+                Mensagens de erro claras com ações de recuperação. Todas em português sem jargão técnico.
+            </p>
+            
+            <div class="component-grid">
+                <!-- Network Error -->
+                <div class="component-item">
+                    <div class="component-label">Network Error</div>
+                    <div class="error-state">
+                        <div class="error-icon network">
+                            <i class="fi fi-rr-cross-circle"></i>
+                        </div>
+                        <h3 class="error-title">Não foi possível conectar</h3>
+                        <p class="error-message">Verifique sua conexão com a internet e tente novamente</p>
+                        <div class="error-actions">
+                            <button class="btn btn-primary">
+                                <i class="fi fi-rr-refresh"></i>
+                                Tentar Novamente
+                            </button>
+                            <button class="btn btn-secondary">Voltar para Início</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 404 Not Found -->
+                <div class="component-item">
+                    <div class="component-label">404 Not Found</div>
+                    <div class="error-state">
+                        <div class="error-icon not-found">
+                            <i class="fi fi-rr-search"></i>
+                        </div>
+                        <h3 class="error-title">Artigo não encontrado</h3>
+                        <p class="error-message">Este artigo pode ter sido deletado ou o link está incorreto</p>
+                        <div class="error-actions">
+                            <button class="btn btn-primary">Voltar para Lista de Artigos</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Timeout Error -->
+                <div class="component-item">
+                    <div class="component-label">Timeout Error</div>
+                    <div class="error-state">
+                        <div class="error-icon timeout">
+                            <i class="fi fi-rr-time-fast"></i>
+                        </div>
+                        <h3 class="error-title">Requisição demorou demais</h3>
+                        <p class="error-message">A requisição está demorando mais que o esperado</p>
+                        <div class="error-actions">
+                            <button class="btn btn-primary">Continuar Aguardando</button>
+                            <button class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Footer -->
+        <section class="section">
+            <h2 class="section-title">🦶 Footer</h2>
+            <p class="section-description">
+                Footer com informações sobre fonte de dados e link para HackerNews original.
+            </p>
+            
+            <footer class="footer">
+                <div class="footer-content">
+                    <p>
+                        Dados obtidos da <a href="https://news.ycombinator.com" class="footer-link" target="_blank" rel="noopener noreferrer">API oficial do HackerNews</a>.
+                        <br>
+                        Este é um projeto de demonstração focado em acessibilidade para usuários seniores.
+                    </p>
+                </div>
+            </footer>
+        </section>
+
+        <!-- Section: Icons -->
+        <section class="section">
+            <h2 class="section-title">🎯 Ícones Flaticon</h2>
+            <p class="section-description">
+                Conjunto completo de ícones Flaticon Uicons (Regular Rounded) usados no projeto.
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 24px; text-align: center;">
+                <div>
+                    <i class="fi fi-sr-diamond" style="font-size: 32px; color: var(--color-primary);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-sr-diamond<br>(Logo)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-user" style="font-size: 32px; color: var(--color-gray-500);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-user<br>(Autor)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-arrow-small-up" style="font-size: 32px; color: var(--color-gray-500);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-arrow-small-up<br>(Pontos)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-comment" style="font-size: 32px; color: var(--color-gray-500);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-comment<br>(Comentários)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-clock" style="font-size: 32px; color: var(--color-gray-500);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-clock<br>(Tempo)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-link" style="font-size: 32px; color: var(--color-gray-500);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-link<br>(Link)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-angle-small-left" style="font-size: 32px; color: var(--color-gray-500);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-angle-small-left<br>(Voltar)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-angle-small-down" style="font-size: 32px; color: var(--color-gray-500);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-angle-small-down<br>(Expandido)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-angle-small-right" style="font-size: 32px; color: var(--color-gray-500);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-angle-small-right<br>(Colapsado)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-refresh" style="font-size: 32px; color: var(--color-primary);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-refresh<br>(Retry)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-cross-circle" style="font-size: 32px; color: var(--color-error);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-cross-circle<br>(Erro)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-search" style="font-size: 32px; color: var(--color-gray-500);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-search<br>(404)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-time-fast" style="font-size: 32px; color: var(--color-warning);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-time-fast<br>(Timeout)</p>
+                </div>
+                <div>
+                    <i class="fi fi-rr-check" style="font-size: 32px; color: var(--color-success);"></i>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-700);">fi-rr-check<br>(Sucesso)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Note -->
+        <div style="background: var(--color-primary-dark); color: white; padding: 32px; border-radius: 12px; text-align: center; margin-top: 48px;">
+            <h2 style="font-size: 24px; margin-bottom: 12px;">✅ Biblioteca de Componentes Completa</h2>
+            <p style="opacity: 0.9;">Todos os componentes seguem WCAG 2.1 AA, são navegáveis via teclado e otimizados para usuários seniores.</p>
+            <p style="margin-top: 8px; font-size: 14px; opacity: 0.7;">Criado por Sally (UX Expert) • 2026-01-20</p>
+        </div>
+    </div>
+</body>
+</html>
