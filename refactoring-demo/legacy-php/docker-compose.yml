@@ -1,0 +1,78 @@
+# Docker Compose for Legacy TaskMaster Pro
+# This runs the PHP 5 application with MySQL database
+#
+# Usage:
+#   docker-compose up -d
+#   Open http://localhost:8080
+#
+# Demo credentials:
+#   Email: admin@taskmaster.com
+#   Password: admin123
+#
+# WARNING: This application is intentionally insecure for demonstration purposes!
+
+services:
+  # Legacy PHP Application
+  app:
+    build: .
+    platform: linux/amd64
+    ports:
+      - "8080:80"
+    volumes:
+      - ./uploads:/var/www/html/uploads
+      - ./logs:/var/www/html/logs
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_HOST=db
+      - DB_USER=taskmaster_user
+      - DB_PASS=tm_password_123
+      - DB_NAME=taskmaster
+    networks:
+      - taskmaster-net
+
+  # MySQL Database (using mysql:8.0 with native password for ARM64 compatibility)
+  db:
+    image: mysql:8.0
+    platform: linux/arm64
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: taskmaster
+      MYSQL_USER: taskmaster_user
+      MYSQL_PASSWORD: tm_password_123
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - mysql-data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - taskmaster-net
+
+  # phpMyAdmin for database inspection (optional)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    platform: linux/amd64
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+    depends_on:
+      - db
+    networks:
+      - taskmaster-net
+
+networks:
+  taskmaster-net:
+    driver: bridge
+
+volumes:
+  mysql-data:

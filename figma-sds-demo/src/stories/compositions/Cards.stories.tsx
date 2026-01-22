@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import {
   Card,
   PricingCard,
+  PricingCardSkeleton,
   ProductInfoCard,
   ReviewCard,
   StatsCard,
@@ -134,6 +135,256 @@ export const StoryPricingCard: StoryObj<typeof PricingCard> = {
       ))}
     </Flex>
   ),
+};
+
+/**
+ * Interactive playground for PricingCard with full control over all props.
+ * Use this story to explore all available configurations and test different combinations.
+ *
+ * @example
+ * ```tsx
+ * <PricingCard
+ *   sku="pro-monthly"
+ *   interval="month"
+ *   heading="Pro Plan"
+ *   price="50"
+ *   priceCurrency="$"
+ *   priceLabel="/ mo"
+ *   size="large"
+ *   variant="stroke"
+ *   action="Get Started"
+ *   actionVariant="primary"
+ *   onAction={() => console.log("clicked")}
+ *   list={["Feature 1", "Feature 2", "Feature 3"]}
+ * />
+ * ```
+ */
+export const PricingCardPlayground: StoryObj<typeof PricingCard> = {
+  name: "Playground",
+  args: {
+    sku: "pro-monthly",
+    interval: "month",
+    heading: "Pro Plan",
+    price: "50",
+    priceCurrency: "$",
+    priceLabel: "/ mo",
+    size: "large",
+    variant: "stroke",
+    action: "Get Started",
+    actionVariant: "primary",
+    actionDisabled: false,
+    list: ["Unlimited projects", "Priority support", "Advanced analytics"],
+  },
+  argTypes: {
+    heading: { control: "text", description: "The plan name displayed at the top of the card" },
+    price: { control: "text", description: "The price amount (without currency)" },
+    priceCurrency: { control: "text", description: "Currency symbol (e.g., $, €, £)" },
+    priceLabel: { control: "text", description: "Label shown after price (e.g., / mo, / yr)" },
+    size: {
+      control: "select",
+      options: ["large", "small"],
+      description: "Card size - large for featured plans, small for compact display",
+    },
+    variant: {
+      control: "select",
+      options: ["default", "stroke", "brand"],
+      description: "Visual style - use brand for highlighted/featured plans",
+    },
+    action: { control: "text", description: "CTA button text" },
+    actionVariant: {
+      control: "select",
+      options: ["primary", "neutral", "subtle"],
+      description: "Button style variant",
+    },
+    actionDisabled: { control: "boolean", description: "Disable the action button" },
+    sku: { control: "text", description: "Unique identifier for the pricing tier" },
+    interval: {
+      control: "select",
+      options: ["month", "year"],
+      description: "Billing interval",
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A fully interactive playground for the PricingCard component. Modify any prop using the controls panel to see how the component responds. Ideal for exploring all available configurations.",
+      },
+    },
+  },
+  render: (args) => <PricingCard {...args} onAction={() => alert(`Action: ${args.action}`)} />,
+};
+
+/**
+ * Default variant - standard pricing card with subtle background.
+ */
+export const PricingCardDefault: StoryObj<typeof PricingCard> = {
+  name: "Default Variant",
+  args: {
+    sku: "basic-monthly",
+    interval: "month",
+    heading: "Basic Plan",
+    price: "19",
+    priceCurrency: "$",
+    priceLabel: "/ mo",
+    size: "large",
+    variant: "default",
+    action: "Select Plan",
+    actionVariant: "primary",
+    list: ["5 projects", "Email support", "Basic analytics"],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The default variant provides a subtle background without a border. Use this for standard pricing tiers that don't need emphasis.",
+      },
+    },
+  },
+  render: (args) => <PricingCard {...args} onAction={() => {}} />,
+};
+
+/**
+ * Stroke variant - pricing card with a visible border outline.
+ */
+export const PricingCardStroke: StoryObj<typeof PricingCard> = {
+  name: "Stroke Variant",
+  args: {
+    sku: "pro-monthly",
+    interval: "month",
+    heading: "Pro Plan",
+    price: "49",
+    priceCurrency: "$",
+    priceLabel: "/ mo",
+    size: "large",
+    variant: "stroke",
+    action: "Select Plan",
+    actionVariant: "primary",
+    list: ["Unlimited projects", "Priority support", "Advanced analytics"],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The stroke variant adds a border outline to the card. This is the default variant and works well for most pricing displays.",
+      },
+    },
+  },
+  render: (args) => <PricingCard {...args} onAction={() => {}} />,
+};
+
+/**
+ * Brand variant - highlighted pricing card for featured or recommended plans.
+ */
+export const PricingCardBrand: StoryObj<typeof PricingCard> = {
+  name: "Brand Variant",
+  args: {
+    sku: "enterprise-monthly",
+    interval: "month",
+    heading: "Enterprise",
+    price: "99",
+    priceCurrency: "$",
+    priceLabel: "/ mo",
+    size: "large",
+    variant: "brand",
+    action: "Contact Sales",
+    actionVariant: "neutral",
+    list: ["Everything in Pro", "Dedicated support", "Custom integrations", "SLA guarantee"],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The brand variant uses the brand color scheme to highlight featured or recommended plans. Typically used for the most popular tier. Note: use neutral button variant for better contrast.",
+      },
+    },
+  },
+  render: (args) => <PricingCard {...args} onAction={() => {}} />,
+};
+
+/**
+ * Large size - full-featured card with vertical layout and prominent pricing.
+ */
+export const PricingCardLarge: StoryObj<typeof PricingCard> = {
+  name: "Large Size",
+  args: {
+    sku: "pro-monthly",
+    interval: "month",
+    heading: "Pro Plan",
+    price: "49",
+    priceCurrency: "$",
+    priceLabel: "/ mo",
+    size: "large",
+    variant: "stroke",
+    action: "Get Started",
+    actionVariant: "primary",
+    list: ["Unlimited projects", "Priority support", "Advanced analytics"],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Large size displays the card in a vertical layout with prominent pricing. Best for dedicated pricing pages where cards have room to breathe.",
+      },
+    },
+  },
+  render: (args) => <PricingCard {...args} onAction={() => {}} />,
+};
+
+/**
+ * Small size - compact card with horizontal header layout.
+ */
+export const PricingCardSmall: StoryObj<typeof PricingCard> = {
+  name: "Small Size",
+  args: {
+    sku: "pro-yearly",
+    interval: "year",
+    heading: "Pro Plan",
+    price: "490",
+    priceCurrency: "$",
+    priceLabel: "/ yr",
+    size: "small",
+    variant: "stroke",
+    action: "Get Started",
+    actionVariant: "primary",
+    list: ["Unlimited projects", "Priority support", "Advanced analytics"],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Small size displays the card in a compact horizontal header layout. Use when space is limited or for secondary pricing displays.",
+      },
+    },
+  },
+  render: (args) => <PricingCard {...args} onAction={() => {}} />,
+};
+
+/**
+ * Skeleton loading state for PricingCard.
+ * Use while pricing data is being fetched.
+ */
+export const PricingCardSkeletonStory: StoryObj<typeof PricingCardSkeleton> = {
+  name: "Skeleton",
+  args: {
+    size: "large",
+  },
+  argTypes: {
+    size: {
+      control: "select",
+      options: ["large", "small"],
+      description: "Size of the skeleton card",
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A loading skeleton placeholder for PricingCard. Display this while pricing data is being fetched to maintain layout stability and provide visual feedback to users.",
+      },
+    },
+  },
+  render: (args) => <PricingCardSkeleton {...args} />,
 };
 
 export const StoryProductInfoCard: StoryObj<typeof ProductInfoCard> = {

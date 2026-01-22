@@ -190,7 +190,7 @@ export function pricingPlanToPricingCardProps(
     priceCurrency: plan.currency,
     action,
     actionDisabled: isActive,
-    actionVariant: index === 1 ? "neutral" : "primary",
+    actionVariant: index === 1 ? "neutral" : "positive",
     variant: index === 1 ? "brand" : "stroke",
     price: plan.price.toString(),
     priceLabel: plan.interval === "month" ? "/ mo" : "/ yr",
@@ -253,7 +253,7 @@ export function PricingCardSkeleton({
 export function PricingCard({
   heading,
   action,
-  actionVariant = "primary",
+  actionVariant = "positive",
   actionIcon,
   actionDisabled,
   onAction,
@@ -277,7 +277,7 @@ export function PricingCard({
         alignSecondary="center"
         gap={size === "large" ? "400" : undefined}
       >
-        <TextHeading>{heading}</TextHeading>
+        <TextSubheading>{heading}</TextSubheading>
         <TextPrice
           size={size}
           label={priceLabel}

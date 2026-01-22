@@ -8,7 +8,7 @@ export type ButtonProps = Omit<ButtonBaseProps, "variant"> & {
   variant?: Exclude<
     ButtonBaseProps["variant"],
     "danger-primary" | "danger-subtle"
-  >;
+  > | "positive";
 };
 export const Button = React.forwardRef(function Button(
   { className, size = "medium", variant = "primary", ...props }: ButtonProps,
@@ -95,6 +95,7 @@ type ButtonBaseProps = {
     | "primary"
     | "neutral"
     | "subtle"
+    | "positive"
     | "danger-primary"
     | "danger-subtle";
 } & AnchorOrButtonProps;

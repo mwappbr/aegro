@@ -101,7 +101,7 @@
 }
 
 .text-list-item {
-  font: var(--sds-font-body);
+  font: var(--sds-font-body-base);
 }
 
 .text-price {

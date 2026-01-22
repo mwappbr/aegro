@@ -65,6 +65,7 @@ figma.connect(PricingCard, "<FIGMA_CARDS_PRICING_CARD>", {
     }),
     list: figma.children("Text List"),
     variant: figma.enum("Variant", {
+      Default: "default",
       Stroke: "stroke",
       Brand: "brand",
     }),
