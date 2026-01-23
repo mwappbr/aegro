@@ -1,0 +1,128 @@
+# <!-- Powered by BMAD™ Core -->
+template:
+  id: pr-review-template-v1
+  name: Pull Request Review Report
+  version: 1.0
+  output:
+    format: yaml
+    filename: reviews/{{pr_id}}-review-{{timestamp}}.yaml
+    title: "PR Review: {{pr_id}}"
+
+# Required fields (keep these first)
+review_id: "{{pr_id}}"
+reviewer: "Mauro (Code Review Specialist)"
+review_date: "{{iso_timestamp}}"
+target_branch: "{{target_branch}}"
+base_branch: "{{base_branch}}"
+
+# Summary section
+summary:
+  overall_status: "{{overall_status}}" # APPROVE|REQUEST_CHANGES|COMMENT
+  quality_score: {{quality_score}} # 0-100
+  security_score: {{security_score}} # 0-100
+  performance_score: {{performance_score}} # 0-100
+  total_files_reviewed: {{file_count}}
+  total_issues: {{total_issues}}
+  critical_issues: {{critical_count}}
+  high_priority: {{high_count}}
+  medium_priority: {{medium_count}}
+  low_priority: {{low_count}}
+
+# Code Quality Findings
+code_quality:
+  status: "{{quality_status}}" # PASS|CONCERNS|FAIL
+  findings: []
+  # Example:
+  # findings:
+  #   - file: "src/services/user.service.ts"
+  #     line: 42
+  #     severity: "high"
+  #     category: "type-safety"
+  #     finding: "Using 'any' type reduces type safety"
+  #     recommendation: "Replace with proper interface or type definition"
+  #     example: "const user: any = getUserData();"
+
+# Security Analysis
+security:
+  status: "{{security_status}}" # PASS|CONCERNS|FAIL
+  vulnerabilities: []
+  # Example:
+  # vulnerabilities:
+  #   - id: "SEC-001"
+  #     file: "src/api/auth.ts"
+  #     line: 15
+  #     severity: "critical"
+  #     vulnerability_type: "Hardcoded Secret"
+  #     description: "API key is hardcoded in source code"
+  #     impact: "Exposure of API key could lead to unauthorized access"
+  #     remediation: "Move to environment variable or secure secret management"
+  #     references: ["https://owasp.org/www-community/vulnerabilities/Use_of_hard-coded_cryptographic_key"]
+  dependencies: []
+  # Example:
+  # dependencies:
+  #   - package: "lodash"
+  #     version: "4.17.20"
+  #     vulnerability: "Prototype Pollution"
+  #     severity: "high"
+  #     fix_version: "4.17.21"
+
+# Performance Analysis
+performance:
+  status: "{{performance_status}}" # PASS|CONCERNS|FAIL
+  issues: []
+  # Example:
+  # issues:
+  #   - file: "src/utils/data-processor.ts"
+  #     line: 78
+  #     severity: "medium"
+  #     issue_type: "Inefficient Algorithm"
+  #     description: "O(n²) complexity in nested loop"
+  #     impact: "Performance degrades significantly with large datasets"
+  #     recommendation: "Consider using Map for O(1) lookups"
+  #     estimated_improvement: "~80% faster for datasets > 1000 items"
+
+# Recommendations
+recommendations:
+  must_fix: []
+  # Example:
+  # must_fix:
+  #   - priority: "critical"
+  #     action: "Remove hardcoded API key"
+  #     files: ["src/api/auth.ts"]
+  #     reason: "Security vulnerability - credentials exposed"
+  should_fix: []
+  # Example:
+  # should_fix:
+  #   - priority: "high"
+  #     action: "Add input validation"
+  #     files: ["src/api/users.ts"]
+  #     reason: "Prevents potential injection attacks"
+  nice_to_have: []
+  # Example:
+  # nice_to_have:
+  #   - priority: "low"
+  #     action: "Extract magic numbers to constants"
+  #     files: ["src/utils/calculations.ts"]
+  #     reason: "Improves readability and maintainability"
+
+# Positive Feedback
+positive_feedback: []
+# Example:
+# positive_feedback:
+#   - file: "src/services/user.service.ts"
+#     aspect: "Error Handling"
+#     note: "Excellent error handling with proper error types and clear messages"
+
+# Checklist Results
+checklist_results:
+  pr_checklist_status: "{{checklist_status}}" # COMPLETE|INCOMPLETE
+  items_checked: {{items_checked}}
+  items_total: {{items_total}}
+  missing_items: []
+  # Example:
+  # missing_items: ["Security: Input Validation", "Performance: Memory Management"]
+
+# Additional Notes
+notes: |
+  {{additional_notes}}
+  # Use this section for any additional context, explanations, or follow-up items

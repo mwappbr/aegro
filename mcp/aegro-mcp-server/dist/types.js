@@ -1,0 +1,2 @@
+// Aegro API Types
+export {};
